@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -6,11 +7,10 @@ import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import products from '../products';
 
 const ProductScreen = ({ match }) => {
   const [qty, setQty] = useState(1);
-  const product = products.find((p) => p._id === match.params.id);
+  const [product, setProduct] = useState({});
 
   // Maximum buying quantity for each product: 8
   const qtyDropdown = () => {
@@ -25,6 +25,14 @@ const ProductScreen = ({ match }) => {
     }
     return jsxArr;
   };
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data } = await axios.get(`/api/products/${match.params.id}`);
+      setProduct(data);
+    };
+    fetchProduct();
+  }, [match.params.id]);
 
   return (
     <>

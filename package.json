@@ -1,0 +1,30 @@
+{
+  "name": "skateboard-shop",
+  "version": "1.0.0",
+  "description": "An e-commerce website with MERN stack",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yinhangc/skateboard-shop.git"
+  },
+  "author": "Emily",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yinhangc/skateboard-shop/issues"
+  },
+  "homepage": "https://github.com/yinhangc/skateboard-shop#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1",
+    "nodemon": "^2.0.12"
+  }
+}
