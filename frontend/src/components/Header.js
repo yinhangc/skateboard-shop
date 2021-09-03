@@ -8,11 +8,11 @@ const Header = () => {
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="#home">Emi skateboard</Navbar.Brand>
+          <Navbar.Brand href="/">Emi skateboard</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link href="#">Cart</Nav.Link>
+              <Nav.Link href="/cart">Cart</Nav.Link>
               <Nav.Link href="#">Sign in</Nav.Link>
             </Nav>
           </Navbar.Collapse>

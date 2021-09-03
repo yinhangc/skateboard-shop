@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -7,10 +7,27 @@ import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import {
+  listProductDetails,
+  clearProductDetails,
+} from '../actions/productActions';
 
 const ProductScreen = ({ match }) => {
   const [qty, setQty] = useState(1);
-  const [product, setProduct] = useState({});
+
+  const dispatch = useDispatch();
+  const productDetails = useSelector((state) => state.productDetails);
+  const { loading, error, productInfo: product } = productDetails;
+
+  useEffect(() => {
+    dispatch(listProductDetails(match.params.id));
+
+    return () => {
+      dispatch(clearProductDetails());
+    };
+  }, [dispatch, match.params.id]);
 
   // Maximum buying quantity for each product: 8
   const qtyDropdown = () => {
@@ -26,71 +43,73 @@ const ProductScreen = ({ match }) => {
     return jsxArr;
   };
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const { data } = await axios.get(`/api/products/${match.params.id}`);
-      setProduct(data);
-    };
-    fetchProduct();
-  }, [match.params.id]);
+  const onAddToCartClicked = () => {
+    console.log(qty);
+  };
 
   return (
     <>
       <Link className="btn btn-primary my-3" to="/">
         Back
       </Link>
-      <Row>
-        <Col md={6}>
-          <Image src={product.image} alt={product.name} fluid />
-        </Col>
-        <Col md={6}>
-          <ListGroup variant="flush">
-            <ListGroup.Item as="h2">{product.name}</ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Col>Price:</Col>
-                <Col>HKD {product.price}</Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Col>Status:</Col>
-                <Col style={{ color: product.countInStock > 0 || 'red' }}>
-                  {product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}
-                </Col>
-              </Row>
-            </ListGroup.Item>
-            {product.countInStock > 0 && (
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message message={error} />
+      ) : (
+        <Row>
+          <Col md={6}>
+            <Image src={product.image} alt={product.name} fluid />
+          </Col>
+          <Col md={6}>
+            <ListGroup variant="flush">
+              <ListGroup.Item as="h2">{product.name}</ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Qty:</Col>
-                  <Col>
-                    <Form.Control
-                      as="select"
-                      className="product-details-qty"
-                      value={qty}
-                      onChange={(e) => setQty(e.target.value)}
-                    >
-                      {qtyDropdown()}
-                    </Form.Control>
+                  <Col>Price:</Col>
+                  <Col>HKD {product.price}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Status:</Col>
+                  <Col style={{ color: product.countInStock > 0 || 'red' }}>
+                    {product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}
                   </Col>
                 </Row>
               </ListGroup.Item>
-            )}
-            <ListGroup.Item>
-              <Button className="w-100" disabled={product.countInStock === 0}>
-                Add To Cart
-              </Button>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <p className="mb-1" style={{ textDecoration: 'underline' }}>
-                Description:
-              </p>
-              <p>{product.description}</p>
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-      </Row>
+              {product.countInStock > 0 && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Qty:</Col>
+                    <Col>
+                      <Form.Control
+                        as="select"
+                        className="product-details-qty"
+                        value={qty}
+                        onChange={(e) => setQty(e.target.value)}
+                      >
+                        {qtyDropdown()}
+                      </Form.Control>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
+              <ListGroup.Item>
+                <Button className="w-100" disabled={product.countInStock === 0} onClick={onAddToCartClicked}>
+                  Add To Cart
+                </Button>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <p className="mb-1" style={{ textDecoration: 'underline' }}>
+                  Description:
+                </p>
+                <p>{product.description}</p>
+              </ListGroup.Item>
+            </ListGroup>
+          </Col>
+        </Row>
+      )}
     </>
   );
 };
