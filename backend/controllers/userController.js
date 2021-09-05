@@ -13,6 +13,7 @@ const authUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      cartItems: user.cartItems,
       isAdmin: user.isAdmin,
       token: generateToken(user._id), // Generate an access token
     })
@@ -30,7 +31,7 @@ const authUser = asyncHandler(async (req, res) => {
 
 // @desc Get user profile
 // @route GET /api/users/profile
-// @access Private (need a token)
+// @access Private 
 const getUserProfile = asyncHandler(async (req, res) => {
   if (req.user) {
     const { user } = req;
@@ -75,4 +76,52 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser };
+// @desc Add an item to user's cart 
+// @route POST /api/users/cart
+// @access Private 
+const addToUserCart = asyncHandler(async (req, res) => {
+  const product = req.body;
+  const user = await User.findById(req.user._id);
+  if (user) {
+    const existItem = user.cartItems.find(item => item.productId.toString() === product.productId);
+    if (existItem) {
+      user.cartItems[user.cartItems.indexOf(existItem)] = product;
+    } else {
+      user.cartItems.push(product);
+    }
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      cartItems: updatedUser.cartItems,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Unable to add items to cart')
+  }
+});
+
+// @desc Remove an item from user's cart 
+// @route DELETE /api/users/cart/:id
+// @access Private 
+const removeFromUserCart = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.cartItems = user.cartItems.filter(item => item.productId.toString() !== req.params.id);
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      cartItems: updatedUser.cartItems,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Unable to delete cart item')
+  }
+});
+
+export { authUser, getUserProfile, registerUser, addToUserCart, removeFromUserCart };

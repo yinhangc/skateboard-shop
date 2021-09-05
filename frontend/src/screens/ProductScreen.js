@@ -13,13 +13,16 @@ import {
   listProductDetails,
   clearProductDetails,
 } from '../actions/productActions';
+import { addToCart } from '../actions/cartActions';
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1);
 
   const dispatch = useDispatch();
+
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, productInfo: product } = productDetails;
+  const userDetails = useSelector((state) => state.userDetails);
 
   useEffect(() => {
     dispatch(listProductDetails(match.params.id));
@@ -43,14 +46,20 @@ const ProductScreen = ({ match }) => {
     return jsxArr;
   };
 
-  const onAddToCartClicked = () => {
-    console.log(qty);
+  const onAddToCartClick = () => {
+    // Redirect user if not yet login
+    if (!userDetails) {
+      history.push(`/login?redirect=product/${product._id}`);
+    } else {
+      history.push('/cart');
+      dispatch(addToCart(product, qty));
+    }
   };
 
   return (
     <>
-      <Link className="btn btn-primary my-3" to="/">
-        Back
+      <Link className="btn my-2 w-auto" to="/" style={{ background: '#eee' }}>
+        &lt; Back
       </Link>
       {loading ? (
         <Loader />
@@ -96,7 +105,11 @@ const ProductScreen = ({ match }) => {
                 </ListGroup.Item>
               )}
               <ListGroup.Item>
-                <Button className="w-100" disabled={product.countInStock === 0} onClick={onAddToCartClicked}>
+                <Button
+                  className="w-100"
+                  disabled={product.countInStock === 0}
+                  onClick={onAddToCartClick}
+                >
                   Add To Cart
                 </Button>
               </ListGroup.Item>

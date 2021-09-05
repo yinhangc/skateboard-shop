@@ -1,28 +1,13 @@
-import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstant"
+import { CART_MODIFY_REQUEST, CART_MODIFY_SUCCESS, CART_MODIFY_FAIL } from "../constants/cartConstant"
 
-export const cartReducer = (state = { cartItems: [] }, action) => {
+export const cartReducer = (state = {}, action) => {
   switch (action.type) {
-    case CART_GET_REQUEST:
-      return {
-        loading: true
-      }
-
-    case CART_GET_SUCCESS:
-      return {
-        loading: false,
-        cartItems: action.payload,
-      }
-
-    case CART_GET_FAIL:
-      return {
-        loading: false,
-        error: action.payload,
-      }
-    case CART_ADD_ITEM:
-      const item = action.payload;
-
-    case CART_REMOVE_ITEM:
-
+    case CART_MODIFY_REQUEST:
+      return { loading: true, error: false };
+    case CART_MODIFY_SUCCESS:
+      return { loading: false, error: false };
+    case CART_MODIFY_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state
   }

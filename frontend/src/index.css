@@ -3,3 +3,19 @@
 .product-details-qty:hover {
   cursor: pointer;
 }
+
+.cart-qty {
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 990px) {
+  .cart-qty {
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .cart-qty {
+    padding: 0.75rem 1.5rem;
+  }
+}
