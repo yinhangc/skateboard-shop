@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Product from '../components/Product';
@@ -13,31 +12,12 @@ const HomeScreen = () => {
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
 
-  const onSelect = (selectedKey) => {
-    console.log(selectedKey);
-  };
-
   useEffect(() => {
     dispatch(listProducts());
   }, [dispatch]);
 
   return (
     <>
-      <Nav
-        className="justify-content-center"
-        activeKey="/home"
-        onSelect={onSelect}
-      >
-        <Nav.Item>
-          <Nav.Link eventKey="link-1">All</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="link-2">Skateboard</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="link-3">Penny</Nav.Link>
-        </Nav.Item>
-      </Nav>
       <h1 className="my-3">Products</h1>
       {loading ? (
         <Loader />

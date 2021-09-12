@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { FaCartPlus } from 'react-icons/fa';
 import {
   listProductDetails,
   clearProductDetails,
@@ -110,7 +111,7 @@ const ProductScreen = ({ match, history }) => {
                   disabled={product.countInStock === 0}
                   onClick={onAddToCartClick}
                 >
-                  Add To Cart
+                  <FaCartPlus style={{ margin: "0 .2rem .2rem 0" }} /> Add To Cart
                 </Button>
               </ListGroup.Item>
               <ListGroup.Item>

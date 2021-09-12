@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import { IoBagCheck } from 'react-icons/io5';
 import { addToCart, removeFromCart } from '../actions/cartActions';
 
 const CartScreen = () => {
@@ -163,7 +164,7 @@ const CartScreen = () => {
                   className="w-100"
                   disabled={cartItems.length === 0}
                 >
-                  Proceed To Checkout
+                  <IoBagCheck style={{ margin: '0 .15rem .24rem 0' }} /> Proceed To Checkout
                 </Button>
               </ListGroup.Item>
             </ListGroup>

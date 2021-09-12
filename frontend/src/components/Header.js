@@ -7,6 +7,10 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
 import { logout } from '../actions/userActions';
+import { FaShoppingCart } from 'react-icons/fa';
+import { FiLogIn } from 'react-icons/fi';
+import { FiLogOut } from 'react-icons/fi';
+import { BsPersonFill } from 'react-icons/bs';
 
 const Header = () => {
   const history = useHistory();
@@ -29,20 +33,27 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               <LinkContainer to="/cart">
-                <Nav.Link active={false}>Cart</Nav.Link>
+                <Nav.Link active={false}>
+                  <FaShoppingCart style={{ margin: '0 .3rem .2rem 0' }} />
+                  Cart
+                </Nav.Link>
               </LinkContainer>
               {userDetails ? (
                 <NavDropdown title={userDetails.name} id="username">
                   <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <BsPersonFill style={{ margin: '0 0 .2rem 0' }} /> Profile
+                    </NavDropdown.Item>
                   </LinkContainer>
                   <NavDropdown.Item onClick={onLogoutClicked}>
-                    Logout
+                    <FiLogOut style={{ margin: '0 0 .2rem 0.05rem' }} /> Logout
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
-                  <Nav.Link active={false}>Sign in</Nav.Link>
+                  <Nav.Link active={false}>
+                    <FiLogIn style={{ margin: '0 .1rem .2rem 0' }} /> Sign in
+                  </Nav.Link>
                 </LinkContainer>
               )}
             </Nav>
